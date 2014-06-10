@@ -1,0 +1,7 @@
+
+git remote add upstream https://github.com/stormpython/insightfl.git
+git pull upstream master
+git add -A
+git commit -m "firstkey.pem and test directory " deployment test
+git push origin master
+
