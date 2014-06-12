@@ -1,0 +1,13 @@
+{% extends "layout/base.html" %}
+{% block content %}
+<br><br><br>
+<br><br>
+<p>
+<h1>Time off-route</h1>
+{% for place in places %}
+<div><p><a href='/map?x=5&y=3&stop={{loop.index-1}}&json={{fulljson}}'>{{places[loop.index-1]}}:</a> <b>{{timeoff[loop.index]}}</b> seconds</p></div>
+{% endfor %}
+</p>
+{% endblock %}
+
+<!-- <div><p><a href='drawmap.py?x=5&y=3&stop={{loop.index-1}}&json={{fulljson}}'>{{places[loop.index-1]}}: <b>{{timeoff[loop.index]}}</a></b> seconds</p></div> -->
