@@ -125,7 +125,7 @@ def maps():
     
 
     #return request.args.get("x")
-    return render_template('home.html')
+    return render_template('map.html')
 
 @app.route('/home')
 def home():
