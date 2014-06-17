@@ -1,18 +1,18 @@
 {% extends "layout/base.html" %}
 <br><br><br>
 {% block content %}
-
+<div style="margin-left:40px;">
 <form action="" method="post" name="login">
     {{form.hidden_tag()}}
     <p>
 <br><br><br><br>
         Start:<br>
-        {{form.start(size=80)}}<br>
+        {{form.start(size=40)}}<br>
         {% for error in form.errors.start %}
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
         End:<br>
-        {{form.end(size=80)}}<br>
+        {{form.end(size=40)}}<br>
         {% for error in form.errors.end %}
         <span style="color: red;">[{{error}}]</span>
         {% endfor %}<br>
@@ -23,4 +23,5 @@
     <!-- <p>{{form.remember_me}} Remember Me</p> -->
     <p><input type="submit" value="Find Route!"></p>
 </form>
+</div>  
 {% endblock %}

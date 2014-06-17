@@ -14,7 +14,7 @@ locations = '{locations: '+str(loclist)+', options: {allToAll:false}}'
 print locations
 mquest=mapquest()
 
-
+ 
 # # make request
 # response = mquest.onetomany(locations)
 # ==============

@@ -1,13 +1,58 @@
 {% extends "layout/base.html" %}
+{% block head %}
+  <style>
+    body {
+      overflow-y: auto;
+    }
+    #top {
+      margin-top: 60px;
+    }
+
+</style>
+<link rel="stylesheet"  href="{{ url_for('static', filename='css/CSSTableGenerator.css') }}" type="text/css"/>
+
+{% endblock %}
+
 {% block content %}
 <br><br><br>
 <br><br>
 <p>
-<h1>Time off-route</h1>
+
+<h3 style="margin-left:40px;">Without stops:</h3>
+<h4 style="margin-left:50px;">Distance: {{routelength}} miles</h4>
+<h4 style="margin-left:50px;">Duration: {{routehours}} hours and
+{{routemins}} minutes</h4>
+
+
+<h1 style="margin-left:40px;">Time off-route</h1>
+
+<div class="CSSTableGenerator" style="width:400px;margin-left:40px;"> 
+<table>
+  <tr>
+    <th><b> Location</b></th>
+    <th><b> Time off-route</b></th>
+    <th><b> % of the way</b></th>
+    <th><b> Yelp rating</b></th>
+   </tr>
+   
 {% for place in places %}
-<div><p><a href='/map?x=5&y=3&stop={{loop.index-1}}&json={{fulljson}}'>{{places[loop.index-1]}}:</a> <b>{{timeoff[loop.index]}}</b> seconds</p></div>
+
+  <tr>
+    <td width=30%> <a href={{gmaps_urls[loop.index-1]}}>{{places[loop.index-1]}}:</a></td>
+    <td> <b>{{timeoff[loop.index]}}</b> minutes </td> 
+    <td><center> <b>{{fracoff[loop.index]}} %</b></center></td> 
+    <td><center> <a href={{yelp_urls[loop.index-1]}}> {{ratings[loop.index-1]}} </a></center></td>
+  </tr>
+
+
 {% endfor %}
+</table>
+</div>
 </p>
+            
+
+
+
 {% endblock %}
 
 <!-- <div><p><a href='drawmap.py?x=5&y=3&stop={{loop.index-1}}&json={{fulljson}}'>{{places[loop.index-1]}}: <b>{{timeoff[loop.index]}}</a></b> seconds</p></div> -->

@@ -1,0 +1,56 @@
+{% extends "layout/base.html" %}
+
+{% block content %}
+  
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 80% }
+      body { height: 80%; margin: 3; padding: 3 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+       
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpmTdxyUqC1X914CKyT1b78WABMoex6eM">
+
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(37.397, -120.644),
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"/>
+  </body>
+</html>
+  
+  
+{% endblock %}
+
+{% block footer %}
+  {% include "include/footer.html" %}
+{% endblock %}
+
+
+  
+
+<!-- <div id="wrap">  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBpmTdxyUqC1X914CKyT1b78WABMoex6eM">-->
+<!--     <div class="container"> -->
+<!--       <div class="starter-template"> -->
+<!--         <h1>Bootstrap starter template</h1> -->
+<!--         <p class="lead"> -->
+<!--           Use this document as a way to quickly start any new project.<br> -->
+<!--           All you get is this text and a mostly barebones HTML document. -->
+<!--         </p> -->
+<!--       </div> -->
+<!--     </div> -->
+<!--   </div> -->
