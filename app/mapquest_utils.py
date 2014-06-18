@@ -29,7 +29,7 @@ class mapquest():
 
         url_final=url_base + url_mid + start + url_mid2 + end + url_end
         url_final=url_final.replace(" ","%20")
-        print url_final
+        #print url_final
         return urllib2.urlopen(url_final)
 
     def onetomany(self,locations):
@@ -58,6 +58,14 @@ class mapquest():
         
         toffroute=[x-fidtime for x in totaltime]
         fracoffroute=[x/fiddist for x in totaldist]
+
+        #Round-off and convert units
+
+        toffroute=[0 if x<0 else x for x in toffroute]
+        toffroute=[int(x/60.) for x in toffroute]  #convert to minutes
+
+        fracoffroute=[int(x*100) for x in fracoffroute]
+        fiddist=int(10*fiddist)/10.
                       
         return toffroute,fracoffroute,fiddist,fidtime
 
@@ -70,7 +78,7 @@ class mapquest():
 	jsonmap = mapresponse.text
 
 	jsonObj = json.loads(jsonmap)
-	print json.dumps(jsonObj, indent=4, sort_keys=True)
+	#print json.dumps(jsonObj, indent=4, sort_keys=True)
         return jsonObj
 
     def getmanytoone(self,ricklist):
