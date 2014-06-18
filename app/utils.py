@@ -24,8 +24,8 @@ def getnodes(mapjson,detail):
         sizemap=len(mapjson['route']['legs'][0]['maneuvers'])
         routenodes=[]
         for i in range(sizemap):
-            lat=mapjson['route']['legs'][0]['maneuvers'][0]['startPoint']['lat']
-            lon=mapjson['route']['legs'][0]['maneuvers'][0]['startPoint']['lng']
+            lat=mapjson['route']['legs'][0]['maneuvers'][i]['startPoint']['lat']
+            lon=mapjson['route']['legs'][0]['maneuvers'][i]['startPoint']['lng']
             node=(lat,lon)
             routenodes.append(node)
     elif detail==1:  #Detailed route lat/lons are passed to Rick.
@@ -53,3 +53,17 @@ def mkgoogleurls(startlist,endlist,locations):
             
         #print "GMAPS URLS:",gmaps_urls
     return gmaps_urls
+
+
+
+
+def getpartscore(routepart):
+    
+    if routepart=='beginning':
+        partscore=[5,3,1]
+    if routepart=='middle':
+        partscore=[2,5,2]
+    if routepart=='end':
+        partscore=[1,3,5]
+    return partscore
+    

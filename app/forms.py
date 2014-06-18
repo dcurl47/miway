@@ -8,4 +8,5 @@ class LoginForm(Form):
     end = TextField('end', validators = [Required()])
     #place = SelectField('place', choices=[('restaurant','Restaurant'),('gas station'),('hotel')],default= ('restaurant'))
     place = SelectField('stops', choices = [('restaurant','Restaurant'),('gas','Gas station'),('hotel','Hotel'),('pharmacy','Pharmacy')])
+    partroute=SelectField('partroute', choices = [('middle','middle'),('beginning','beginning'),('end','end')],default=('middle','middle'))
     remember_me = BooleanField('remember_me', default = False)

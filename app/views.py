@@ -28,7 +28,10 @@ import pandas as pd
 @app.route('/', methods = ['GET', 'POST'])    
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    phoenix=False
+    nroute=25  #Maximum number of routes to calculate
+    phoenix=True #Use rick_api if False, phoenix api if True
+
+    
     form = LoginForm()
     if form.validate_on_submit():
         flash('Start at"' + str(form.start.data) +'End at"' + str(form.end.data) )
@@ -36,7 +39,17 @@ def login():
 	start=form.start.data
 	end=form.end.data
         category=form.place.data
+        routepart=form.partroute.data
         
+#--------------------------------
+# Convert user preference for when to stop
+# to a number (to be used in the ranking score)
+#--------------------------------
+        partscore=utils.getpartscore(routepart)
+       
+        
+        print "ROUTEPART = ",routepart
+        #request.form['start']  
 #--------------------------------
 #call Mapquest API and extract
 #route nodes
@@ -51,60 +64,70 @@ def login():
 #call my test database (yelp_phoenix)
 #--------------------------------	
 
-#if phoenix:
-        thick=0.01
-        phoenixlist=query_yelp_db.querybox(routenodes,category,thick)
+        if phoenix:
+            thick=0.01
+            phoenixlist=query_yelp_db.querybox(routenodes,category,thick)
         
-        #needed: ricklist,yelp_urls,yelp_names,yelp_locations (or rickyelp),ratings
-        #ricklist: 'lat  lon'
-        #rickyelp: 'lat, lon'
-        #yelp_names =
+        
 
 #--------------------------------	
 #phoenix analytics
 #--------------------------------
-        dphoenix=pd.DataFrame(phoenixlist)
-        print "COLUMNS  ",
-        if len(dphoenix.columns)!=0:
-            dphoenix=dphoenix.sort(column=1) #sort by rating
-            yelp_names=dphoenix[0].values
-            dphoenix[2]=dphoenix[2].astype('str')
-            dphoenix[3]=dphoenix[3].astype('str')
+            dphoenix=pd.DataFrame(phoenixlist)
+            print dphoenix.describe()
+            
+            if len(dphoenix)!=0:
+                dphoenix['score']=dphoenix[1]
+                dphoenix['strpos']=dphoenix[2].astype('str')+" "+dphoenix[3].astype('str')
+                dphoenix['yelpos']=dphoenix[2].astype('str')+","+dphoenix[3].astype('str')
+                dphoenix=dphoenix.sort(column='score',ascending=False) #sort by score
+                
+                nplaces=len(dphoenix)
+                if nplaces > nroute:
+                    dphoenix=dphoenix.drop(dphoenix.index[nroute:])
+                    nplaces=nroute
+                
+                ricklist=dphoenix['strpos']
+                ricklist=list(ricklist.values)
+                ratings=dphoenix[1]
+                ratings=list(ratings.values)
+                yelp_names=dphoenix[0]
+                yelp_names=list(yelp_names.values)
+                rickyelp=dphoenix['yelpos']
+                rickyelp=list(rickyelp.values)
+                yelp_location=rickyelp
+                yelp_urls=range(nplaces)
+                
+          
         
-        #b[2]+", "+b[3]
-            ricklist=dphoenix[2]+" "+dphoenix[3]
-            rickyelp=dphoenix[2]+","+dphoenix[3]
-            yelp_location=rickyelp
-        
-        #else:
+        else:
 #--------------------------------	
 #call Rick's api
 #--------------------------------	
-        jsonObj=utils.query_rick_api(routenodes,category)
-        #print json.dumps(jsonObj, indent=4, sort_keys=True)
+            jsonObj=utils.query_rick_api(routenodes,category)
+            #print json.dumps(jsonObj, indent=4, sort_keys=True)
 #--------------------------------
 #convert Ricks' data to formats mapquest and yelp like
 #--------------------------------
 
-	ricklist=[]
-        placenames=[] 
-        nplaces=len(jsonObj["places"])
-	for i in range(nplaces):
+            ricklist=[]
+            placenames=[] 
+            nplaces=len(jsonObj["places"])
+            for i in range(nplaces):
 		ricklist.append(str(jsonObj["places"][i]['lat'])+\
                                 "  " +str(jsonObj["places"][i]['lon']))
                 placenames.append(jsonObj["places"][i]['name'])
-        rickyelp=[w.replace('  ',',') for w in ricklist]
-        print "RICKYELP = ",rickyelp
-
-        print "RICKLIST = ",ricklist        
+            rickyelp=[w.replace('  ',',') for w in ricklist]
+            print "RICKYELP = ",rickyelp
+            print "RICKLIST = ",ricklist        
 
 #------------------------------------
 #given location and category,
 #get Yelp reviews and business urls.
 #------------------------------------
-        limit=1
-        (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
-        print "YELP LOCATION: ",yelp_location[i]
+            limit=1
+            (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
+            print "YELP LOCATION: ",yelp_location[i]
 
 #===========================================================
 #Analytics to choose which places to get time off-route for
@@ -115,7 +138,7 @@ def login():
 #place score=
 
 
-
+#end of separation between rick and phoenix.
 #------------------------------------------------	
 #run Mapquest Route matrix to get time off-route, 
 #  distance along route and shortest route
@@ -123,10 +146,12 @@ def login():
         mquest=mapquest_utils.mapquest()
         startlist=[str(start)]
 	endlist=[str(end)]
+        
+        
         timeoff,fracoff,routelength,routetime = mquest.timeoffroute(ricklist,startlist,endlist)
         routehours=routetime//3600
         routemins=(routetime%3600)//60
-
+        #print "FRACOFF = ",fracoff[0].__class__.__name__
 #------------------------------------
 #make Google maps urls.
 #------------------------------------

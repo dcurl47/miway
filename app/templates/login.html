@@ -1,27 +1,48 @@
 {% extends "layout/base.html" %}
 <br><br><br>
 {% block content %}
-<div style="margin-left:40px;">
-<form action="" method="post" name="login">
-    {{form.hidden_tag()}}
-    <p>
-<br><br><br><br>
-        Start:<br>
-        {{form.start(size=40)}}<br>
-        {% for error in form.errors.start %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %}<br>
-        End:<br>
-        {{form.end(size=40)}}<br>
-        {% for error in form.errors.end %}
-        <span style="color: red;">[{{error}}]</span>
-        {% endfor %}<br>
-        
-        
-        <p>Stop on the way:</br>{{form.place}}</p> 
-    </p>
-    <!-- <p>{{form.remember_me}} Remember Me</p> -->
+<div class="container" style="margin-left:40px;">
+  <form action="" method="post" name="login">
+  {{form.hidden_tag()}}
+  <p>
+  <br><br><br><br>
+ 
+  Start:<br>
+   
+  {{form.start(size=40)}}<br>
+  {% for error in form.errors.start %}
+  <span style="color: red;">[{{error}}]</span>
+  {% endfor %}<br><br>
+  End:<br>
+  {{form.end(size=40)}}<br>
+  {% for error in form.errors.end %}
+  <span style="color: red;">[{{error}}]</span>
+  {% endfor %}<br>
+</div>
+<div class="container" style="margin-left:40px;">
+    <div class="row">
+        <div class="col-sm-3">
+	  Stop on the way:<br>{{form.place}}
+	</div>
+	<div class="col-sm-3">
+	  When to stop:<br>{{form.partroute}}
+	</div>
+    </div>
+    <br><br>
     <p><input type="submit" value="Find Route!"></p>
-</form>
-</div>  
+</div>
+  </p>
+  <!-- <p>{{form.remember_me}} Remember Me</p> -->
+
+<!--  </form>-->
 {% endblock %}
+  <!--<table>
+    <tr>
+       <input type="text" name="start">
+      <td>Stop on the way:</br>{{form.place}}</td>
+      <td>       </td>
+      <td>Stop on the way:</br>{{form.place}}</td>
+    </tr>
+  </table> 
+ <div class="form-group">
+  <label for="start">Start</label>-->

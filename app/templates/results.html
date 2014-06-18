@@ -25,24 +25,24 @@
 
 
 <h1 style="margin-left:40px;">Time off-route</h1>
-
+<script type="text/javascript" src="static/js/sorttable.js"></script>
 <div class="CSSTableGenerator" style="width:400px;margin-left:40px;"> 
-<table>
+<table class='sortable'>
   <tr>
-    <th><b> Location</b></th>
-    <th><b> Time off-route</b></th>
-    <th><b> % of the way</b></th>
-    <th><b> Yelp rating</b></th>
+    <td> Location</td>
+    <td> Time off-route</td>
+    <td> % of the way</td>
+    <td> Yelp rating</td>
    </tr>
    
-{% for place in places %}
+   {% for place in places %}
 
-  <tr>
-    <td width=30%> <a href={{gmaps_urls[loop.index-1]}}>{{places[loop.index-1]}}:</a></td>
-    <td> <b>{{timeoff[loop.index]}}</b> minutes </td> 
-    <td><center> <b>{{fracoff[loop.index]}} %</b></center></td> 
-    <td><center> <a href={{yelp_urls[loop.index-1]}}> {{ratings[loop.index-1]}} </a></center></td>
-  </tr>
+   <tr>
+     <td width=30%> <a href={{gmaps_urls[loop.index-1]}}>{{places[loop.index-1]}}:</a></td>
+     <td> <b>{{timeoff[loop.index]}}</b> minutes </td> 
+     <td><center> <b>{{fracoff[loop.index]}} %</b></center></td> 
+     <td><center> <a href={{yelp_urls[loop.index-1]}}> {{ratings[loop.index-1]}} </a></center></td>
+   </tr>
 
 
 {% endfor %}
