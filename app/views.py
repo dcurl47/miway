@@ -17,6 +17,7 @@ import yelp_search
 import query_yelp_db  #for phoenix db
 import utils
 import pandas as pd
+from numpy import sqrt
 # To create a database connection, add the following
 # within your view functions:
 # con = con_db(host, port, user, passwd, db)
@@ -46,7 +47,7 @@ def login():
 # to a number (to be used in the ranking score)
 #--------------------------------
         partscore=utils.getpartscore(routepart)
-       
+        
         
         print "ROUTEPART = ",routepart
         #request.form['start']  
@@ -65,7 +66,12 @@ def login():
 #--------------------------------	
 
         if phoenix:
-            thick=0.01
+            thick=0.03
+            if category=="restaurant":
+                thick=0.01
+            if category=="pharmacy":
+                thick=0.9
+                
             phoenixlist=query_yelp_db.querybox(routenodes,category,thick)
         
         
@@ -73,32 +79,35 @@ def login():
 #--------------------------------	
 #phoenix analytics
 #--------------------------------
-            dphoenix=pd.DataFrame(phoenixlist)
+            mean=0.
+            sig=0.3
+            dphoenix=pd.DataFrame(phoenixlist,columns=['name','ratings','lat','lon'])
             print dphoenix.describe()
             
-            if len(dphoenix)!=0:
-                dphoenix['score']=dphoenix[1]
-                dphoenix['strpos']=dphoenix[2].astype('str')+" "+dphoenix[3].astype('str')
-                dphoenix['yelpos']=dphoenix[2].astype('str')+","+dphoenix[3].astype('str')
-                dphoenix=dphoenix.sort(column='score',ascending=False) #sort by score
+            #if len(dphoenix)!=0:
+            dphoenix['dist']=sqrt((dphoenix['lat']-dphoenix['lat'][0])**2+(dphoenix['lon']-dphoenix['lon'][0])**2)
+            last=dphoenix.last_valid_index()
+            totdist=sqrt((dphoenix['lat'][last]-dphoenix['lat'][0])**2+(dphoenix['lon'][last]-dphoenix['lon'][0])**2)
+            #dphoenix['mean']=0.5
+            #dphoenix['sig']=1.0
+            dphoenix['frac']=dphoenix['dist']/totdist
+            dphoenix['score']=dphoenix.apply(utils.myfunc,axis=1,mean=mean,sig=sig)
+               
+            #dphoenix['score']=dphoenix['ratings']
+            dphoenix['strpos']=dphoenix['lat'].astype('str')+" "+dphoenix['lon'].astype('str')
+            dphoenix['yelpos']=dphoenix['lat'].astype('str')+","+dphoenix['lon'].astype('str')
+            dphoenix=dphoenix.sort(columns='score',ascending=False) #sort by score
                 
-                nplaces=len(dphoenix)
-                if nplaces > nroute:
-                    dphoenix=dphoenix.drop(dphoenix.index[nroute:])
-                    nplaces=nroute
-                
-                ricklist=dphoenix['strpos']
-                ricklist=list(ricklist.values)
-                ratings=dphoenix[1]
-                ratings=list(ratings.values)
-                yelp_names=dphoenix[0]
-                yelp_names=list(yelp_names.values)
-                rickyelp=dphoenix['yelpos']
-                rickyelp=list(rickyelp.values)
-                yelp_location=rickyelp
-                yelp_urls=range(nplaces)
-                
-          
+            nplaces=len(dphoenix)
+            if nplaces > nroute:
+                dphoenix=dphoenix.drop(dphoenix.index[nroute:])
+                nplaces=nroute
+
+#--------------------------------	
+#convert phoenix results to
+#previous format
+#--------------------------------
+            (ricklist,ratings,yelp_names,rickyelp,yelp_location)=utils.convertformat(dphoenix)
         
         else:
 #--------------------------------	
@@ -125,9 +134,10 @@ def login():
 #given location and category,
 #get Yelp reviews and business urls.
 #------------------------------------
-            limit=1
-            (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
-            print "YELP LOCATION: ",yelp_location[i]
+        limit=1
+ 
+        (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
+        print "YELP LOCATION: ",yelp_location
 
 #===========================================================
 #Analytics to choose which places to get time off-route for

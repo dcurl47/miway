@@ -1,5 +1,7 @@
-from forms import LoginForm
+#random functions that didn't fit anywhere else
 
+from forms import LoginForm
+from numpy import exp,sqrt
 import urllib
 import urllib2
 import json
@@ -60,10 +62,30 @@ def mkgoogleurls(startlist,endlist,locations):
 def getpartscore(routepart):
     
     if routepart=='beginning':
-        partscore=[5,3,1]
+        partscore=0.1
     if routepart=='middle':
-        partscore=[2,5,2]
+        partscore=0.5
     if routepart=='end':
-        partscore=[1,3,5]
+        partscore=0.9
     return partscore
     
+def convertformat(dphoenix):
+    
+    ricklist=dphoenix['strpos']
+    ricklist=list(ricklist.values)
+    ratings=dphoenix['ratings']
+    ratings=list(ratings.values)
+    yelp_names=dphoenix['name']
+    yelp_names=list(yelp_names.values)
+    rickyelp=dphoenix['yelpos']
+    rickyelp=list(rickyelp.values)
+    yelp_location=rickyelp
+    
+
+    return ricklist,ratings,yelp_names,rickyelp,yelp_location
+
+
+def myfunc(x,mean=0.5,sig=1.0):
+    #global mean
+    #global sig
+    return exp(-((x['frac']-mean)/sig)**2/2)/(sig*2.506628)

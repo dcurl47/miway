@@ -18,13 +18,13 @@ token_secret = keys.yelp_tok_sec
 
 # Setup URL params from options
 url_params = {}
-def process_request(point,limit, category):
+def process_request(point,limit, category,radius=100):
     url_params = {}
     url_params['ll'] = point 
     url_params['limit'] = limit
     #url_params['category_filter'] = category
     url_params['term']=category
-    #url_params['radius_filter']=100
+    url_params['radius_filter']=radius
     response = request('api.yelp.com','/v2/search', url_params, consumer_key, consumer_secret, token, token_secret)
     return response
 
@@ -71,15 +71,30 @@ def get_yelp_info(limit,locations,category):
   nplaces=len(locations)
   for i in range(nplaces):
     point=locations[i]
-    yelp_response=process_request(point,limit,category)
-    if yelp_response:
-      ratings.append(yelp_response['businesses'][0]['rating'])
-      yelp_urls.append(yelp_response['businesses'][0]['url'])
-      yelp_names.append(yelp_response['businesses'][0]['name'])
-      tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) + ", " + str(yelp_response['businesses'][0]['location']['state_code']) + ", " + str(yelp_response['businesses'][0]['location']['country_code'])
-      tmp=tmp.replace('  ','+')
-      tmp=tmp.replace(' ','+')
-      yelp_location.append(tmp)
+    radius=50
+    yelp_response=process_request(point,limit,category,radius)
+    #print "YELP_RESPONSE = ", len(yelp_response)
+    
+    while not yelp_response['businesses']:
+      radius+=50
+      yelp_response=process_request(point,limit,category,radius)
+      #print "RRRRRRRRRRRRRRRRR", str(yelp_response['businesses'][0]['name'])
+
+    #print "YEEEEEEEEEELP", yelp_response
+    #print str(yelp_response['businesses'][0])
+       
+    ratings.append(yelp_response['businesses'][0]['rating'])
+    yelp_urls.append(yelp_response['businesses'][0]['url'])
+    yelp_names.append(yelp_response['businesses'][0]['name'])
+    if yelp_response['businesses'][0]['location']['address']:
+      tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) 
+    else:
+      tmp=str("Address not Found")
+      
+      #tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) + ", " + str(yelp_response['businesses'][0]['location']['state_code']) + ", " + str(yelp_response['businesses'][0]['location']['country_code'])
+    tmp=tmp.replace('  ','+')
+    tmp=tmp.replace(' ','+')
+    yelp_location.append(tmp)
 
   return yelp_location,yelp_names,yelp_urls,ratings
 

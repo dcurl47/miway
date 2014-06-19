@@ -64,7 +64,7 @@ class mapquest():
         toffroute=[0 if x<0 else x for x in toffroute]
         toffroute=[int(x/60.) for x in toffroute]  #convert to minutes
 
-        fracoffroute=[int(x*100) for x in fracoffroute]
+        fracoffroute=[float(int(x*100)) for x in fracoffroute]
         fiddist=int(10*fiddist)/10.
                       
         return toffroute,fracoffroute,fiddist,fidtime
