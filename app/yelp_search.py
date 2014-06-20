@@ -8,7 +8,7 @@ import urllib2
 
 from keys import keys
 import os
-
+import pandas as pd
 
 consumer_key = keys.yelp_cons_key
 consumer_secret = keys.yelp_cons_sec
@@ -27,6 +27,14 @@ def process_request(point,limit, category,radius=100):
     url_params['radius_filter']=radius
     response = request('api.yelp.com','/v2/search', url_params, consumer_key, consumer_secret, token, token_secret)
     return response
+
+def process_request_id(point,limit):
+    url_params = {}
+    url_params['id'] = point 
+    url_params['limit'] = limit
+    response = request('api.yelp.com','/v2/search', url_params, consumer_key, consumer_secret, token, token_secret)
+    return response
+
 
 def request(host, path, url_params, consumer_key, consumer_secret, token, token_secret):
   """Returns response for API request."""
@@ -63,40 +71,69 @@ def request(host, path, url_params, consumer_key, consumer_secret, token, token_
   return response
 
 def get_yelp_info(limit,locations,category):
-    
+  nroute=25
+  allinfo=[[],[],[],[]]
   ratings=[]
   yelp_urls=[]
   yelp_names=[]
   yelp_location=[]
   nplaces=len(locations)
   for i in range(nplaces):
+    
     point=locations[i]
     radius=50
     yelp_response=process_request(point,limit,category,radius)
     #print "YELP_RESPONSE = ", len(yelp_response)
+    tries=0
     
-    while not yelp_response['businesses']:
+    while not yelp_response['businesses'] and tries<2:
+      print "IN WHILE LOOP, i = ",i
       radius+=50
+      tries+=1
       yelp_response=process_request(point,limit,category,radius)
-      #print "RRRRRRRRRRRRRRRRR", str(yelp_response['businesses'][0]['name'])
-
-    #print "YEEEEEEEEEELP", yelp_response
-    #print str(yelp_response['businesses'][0])
-       
-    ratings.append(yelp_response['businesses'][0]['rating'])
-    yelp_urls.append(yelp_response['businesses'][0]['url'])
-    yelp_names.append(yelp_response['businesses'][0]['name'])
-    if yelp_response['businesses'][0]['location']['address']:
-      tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) 
-    else:
-      tmp=str("Address not Found")
+    
+    
+    if  yelp_response['businesses']:
+      allinfo[0].append(yelp_response['businesses'][0]['rating'])
+      allinfo[1].append(yelp_response['businesses'][0]['url'])
+      allinfo[2].append(yelp_response['businesses'][0]['name'])
+      
+      if yelp_response['businesses'][0]['location']['address']:
+        tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) 
+      else:
+        tmp=str("Address not Found")
       
       #tmp=str(yelp_response['businesses'][0]['location']['address'][0]) + "  " + str(yelp_response['businesses'][0]['location']['city']) + ", " + str(yelp_response['businesses'][0]['location']['state_code']) + ", " + str(yelp_response['businesses'][0]['location']['country_code'])
-    tmp=tmp.replace('  ','+')
-    tmp=tmp.replace(' ','+')
-    yelp_location.append(tmp)
-
+      tmp=tmp.replace('  ','+')
+      tmp=tmp.replace(' ','+')
+      #yelp_location.append(tmp)
+      allinfo[3].append(tmp)
+      #print "AAAAAAAAAAAAAAAAAAAAAAAAAAA", allinfo
+  dphoenix=pd.DataFrame(allinfo,index=['ratings','url','names','location'])
+  #print dphoenix.info
+  dphoenix=dphoenix.transpose()
+  dphoenix=dphoenix.drop_duplicates()
+  dphoenix=dphoenix.drop(dphoenix.index[nroute:])
+  #print dphoenix.info
+  (yelp_location,yelp_names,yelp_urls,ratings) = convertformat(dphoenix)
+      
   return yelp_location,yelp_names,yelp_urls,ratings
+
+
+def convertformat(dphoenix):
+    
+    yelp_location=dphoenix['location']
+    yelp_location=list(yelp_location.values)
+    ratings=dphoenix['ratings']
+    ratings=list(ratings.values)
+    yelp_names=dphoenix['names']
+    yelp_names=list(yelp_names.values)
+    yelp_urls=dphoenix['url']
+    yelp_urls=list(yelp_urls.values)
+    
+    return yelp_location,yelp_names,yelp_urls,ratings
+
+
 
 
 

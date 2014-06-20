@@ -2,13 +2,14 @@ import urllib
 import urllib2
 import json
 import requests
+from keys import keys
 from operator import add
 
 
 class mapquest():
     
     def __init__(self):
-        self.key = 'Fmjtd%7Cluur2g6znl%2C70%3Do5-9a8w9y'
+        self.key = keys.mapquest#'Fmjtd%7Cluur2g6znl%2C70%3Do5-9a8w9y'
 
     def onetoonedirections(self,start,end):
         url = 'http://www.mapquestapi.com/directions/v2/routematrix?key=' + self.key

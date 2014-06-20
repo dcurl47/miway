@@ -6,7 +6,16 @@
   {{form.hidden_tag()}}
   <p>
   <br><br><br><br>
- 
+
+   <div class="row">
+        <div class="col-sm-3">
+	  {%for error in notfound %}
+	  <span style="color: red;">{{error}}</span><br>
+	  {% endfor %}
+	</div>
+	</div>
+
+  <br>
   Start:<br>
    
   {{form.start(size=40)}}<br>
@@ -24,7 +33,7 @@
         <div class="col-sm-3">
 	  Stop on the way:<br>{{form.place}}
 	</div>
-	<div class="col-sm-3">
+	<div class="col-sm-2">
 	  When to stop:<br>{{form.partroute}}
 	</div>
     </div>

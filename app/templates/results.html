@@ -24,16 +24,23 @@
 {{routemins}} minutes</h4>
 
 
-<h1 style="margin-left:40px;">Time off-route</h1>
+<h1 style="margin-left:40px;"><u>Time off-route</u></h1>
 <script type="text/javascript" src="static/js/sorttable.js"></script>
-<div class="CSSTableGenerator" style="width:400px;margin-left:40px;"> 
-<table class='sortable'>
+<div class="" style="width:90%;margin-left:40px;"> 
+<table class='sortable table table-striped'>
+<style type="text/css">.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: #FF9966;
+ }
+</style>
   <tr>
-    <td> Location</td>
-    <td> Time off-route</td>
-    <td> % of the way</td>
-    <td> Yelp rating</td>
+    <th class="td"> Location</th>
+    <th> Time off-route</th>
+    <th> % of the way</th>
+    <th> Yelp rating</th>
    </tr>
+
+   
    
    {% for place in places %}
 
@@ -46,6 +53,7 @@
 
 
 {% endfor %}
+   </tbody>
 </table>
 </div>
 </p>
