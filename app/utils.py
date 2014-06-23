@@ -60,6 +60,7 @@ def mkgoogleurls(startlist,endlist,locations):
 
 
 def getpartscore(routepart):
+
     
     if routepart=='beginning':
         partscore=0.1
@@ -80,9 +81,10 @@ def convertformat(dphoenix):
     rickyelp=dphoenix['yelpos']
     rickyelp=list(rickyelp.values)
     yelp_location=rickyelp
-    
+    yelp_id=dphoenix['id']
+    yelp_id=list(yelp_id.values)
 
-    return ricklist,ratings,yelp_names,rickyelp,yelp_location
+    return ricklist,ratings,yelp_names,rickyelp,yelp_location,yelp_id
 
 
 def myfunc(x,mean=0.5,sig=1.0):

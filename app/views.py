@@ -32,7 +32,9 @@ if __name__ == "__main__":
 @app.route('/', methods = ['GET', 'POST'])    
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
+    limit=1
     nroute=25  #Maximum number of routes to calculate
+    sigma=0.3  #to be used in ranking of results
     phoenix=True #Use rick_api if False, phoenix api if True
 
     
@@ -50,10 +52,9 @@ def login():
 # to a number (to be used in the ranking score)
 #--------------------------------
         partscore=utils.getpartscore(routepart)
+        partsig=sigma 
         
         
-        print "ROUTEPART = ",routepart
-        #request.form['start']  
 #--------------------------------
 #call Mapquest API and extract
 #route nodes
@@ -77,32 +78,29 @@ def login():
                 
             phoenixlist=query_yelp_db.querybox(routenodes,category,thick)
         
-        
+            if len(phoenixlist)<1:
+                flash('Try again!"' + str(form.start.data) +'End at"' + str(form.end.data) )
+                notfound=["Sorry, but nothing was found along your route.","Perhaps, you should go elsewhere."]
+                return render_template('login.html', title = 'try again!',form = form,notfound=notfound)
 
 #--------------------------------	
-#phoenix analytics
+#phoenix ranking analytics
 #--------------------------------
-            mean=0.
-            sig=0.3
-            dphoenix=pd.DataFrame(phoenixlist,columns=['name','ratings','lat','lon'])
-            print dphoenix.describe()
-            
-            #if len(dphoenix)!=0:
+            dphoenix=pd.DataFrame(phoenixlist,columns=['id','name','ratings','lat','lon'])
+            #print "DPHOENIX ID = ",dphoenix['id']
             dphoenix['dist']=sqrt((dphoenix['lat']-dphoenix['lat'][0])**2+(dphoenix['lon']-dphoenix['lon'][0])**2)
             last=dphoenix.last_valid_index()
             totdist=sqrt((dphoenix['lat'][last]-dphoenix['lat'][0])**2+(dphoenix['lon'][last]-dphoenix['lon'][0])**2)
-            #dphoenix['mean']=0.5
-            #dphoenix['sig']=1.0
+
             dphoenix['frac']=dphoenix['dist']/totdist
-            dphoenix['score']=dphoenix.apply(utils.myfunc,axis=1,mean=mean,sig=sig)
+            dphoenix['score']=dphoenix.apply(utils.myfunc,axis=1,mean=partscore,sig=sigma)
                
-            #dphoenix['score']=dphoenix['ratings']
             dphoenix['strpos']=dphoenix['lat'].astype('str')+" "+dphoenix['lon'].astype('str')
             dphoenix['yelpos']=dphoenix['lat'].astype('str')+","+dphoenix['lon'].astype('str')
             dphoenix=dphoenix.sort(columns='score',ascending=False) #sort by score
                 
             nplaces=len(dphoenix)
-            if nplaces > nroute:
+            if nplaces > nroute: #keep at most nroute number of results
                 dphoenix=dphoenix.drop(dphoenix.index[nroute:])
                 nplaces=nroute
 
@@ -110,8 +108,8 @@ def login():
 #convert phoenix results to
 #previous format
 #--------------------------------
-            (ricklist,ratings,yelp_names,rickyelp,yelp_location)=utils.convertformat(dphoenix)
-        
+            (ricklist,ratings,yelp_names,rickyelp,yelp_location,yelp_id)=utils.convertformat(dphoenix)
+            print "FIRST NAME = ", yelp_names[0], yelp_location[0], yelp_id[0]
         else:
 #--------------------------------	
 #call Rick's api
@@ -119,7 +117,7 @@ def login():
             jsonObj=utils.query_rick_api(routenodes,category)
             #print json.dumps(jsonObj, indent=4, sort_keys=True)
 #--------------------------------
-#convert Ricks' data to formats mapquest and yelp like
+#convert Ricks data to formats mapquest and yelp like
 #--------------------------------
 
             ricklist=[]
@@ -130,32 +128,35 @@ def login():
                                 "  " +str(jsonObj["places"][i]['lon']))
                 placenames.append(jsonObj["places"][i]['name'])
             rickyelp=[w.replace('  ',',') for w in ricklist]
-            print "RICKYELP = ",rickyelp
-            print "RICKLIST = ",ricklist        
+            #print "RICKYELP = ",rickyelp
+            #print "RICKLIST = ",ricklist        
+
+#---------------------------------------------
+#end of separation between rick and phoenix.
+#---------------------------------------------
 
 #------------------------------------
 #given location and category,
 #get Yelp reviews and business urls.
 #------------------------------------
-        limit=1
+
  
         (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
+
         print "YELP LOCATION: ",yelp_location
 
 #===========================================================
 #Analytics to choose which places to get time off-route for
 #and which to display on website
 #===========================================================
-#variables: rating, distance along route,category,price
-
-#place score=
 
 
-#end of separation between rick and phoenix.
-#------------------------------------------------	
+        
+#===========================================================
 #run Mapquest Route matrix to get time off-route, 
 #  distance along route and shortest route
-#------------------------------------------------
+#===========================================================
+
         mquest=mapquest_utils.mapquest()
         startlist=[str(start)]
 	endlist=[str(end)]
@@ -164,7 +165,7 @@ def login():
         timeoff,fracoff,routelength,routetime = mquest.timeoffroute(ricklist,startlist,endlist)
         routehours=routetime//3600
         routemins=(routetime%3600)//60
-        #print "FRACOFF = ",fracoff[0].__class__.__name__
+
 #------------------------------------
 #make Google maps urls.
 #------------------------------------
@@ -191,7 +192,6 @@ def maps():
     print tmp
     
 
-    #return request.args.get("x")
     return render_template('map.html')
 
 @app.route('/home')
@@ -218,42 +218,3 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 
-# @app.route('/index')
-# def index():
-#     user = { 'nickname': 'Miguel' } # fake user
-#     posts = [ # fake array of posts
-#         { 
-#             'author': { 'nickname': 'John' }, 
-#             'body': 'Beautiful day in Portland!' 
-#         },
-#         { 
-#             'author': { 'nickname': 'Susan' }, 
-#             'body': 'The Avengers movie was so cool!' 
-#         }
-#     ]
-#     return render_template("index.html",
-#         title = 'Home',
-#         user = user,
-#         posts = posts)
-
-
-##########################################################
-# @app.route('/results',methods=['GET','POST'])
-# def results():
-	
-#     user = { 'nickname': 'Miguel' } # fake user
-#     posts = [ # fake array of posts
-#         { 
-#             'author': { 'nickname': 'John' }, 
-#             'body': 'Beautiful day in Portland!' 
-#         },
-#         { 
-#             'author': { 'nickname': 'Susan' }, 
-#             'body': 'The Avengers movie was so cool!' 
-#         }
-#     ]
-#     print '@@@@@@@@@@@@@@@@@@ g = ',g
-#     return render_template("index.html",
-#         title = 'Home',
-#         user = user,
-#         posts = posts)

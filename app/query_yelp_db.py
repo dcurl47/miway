@@ -18,7 +18,7 @@ def querybox(nodes,category,proximity=0.01):
     print "NODES =", nodes
     a=[]
     tries=0
-    while (not a) or tries<5:
+    while (not a) and tries<5:
         for i in range(nnodes-1):
             if (nodes[i][0]<nodes[i+1][0] and nodes[i][1]<nodes[i+1][1]) or (nodes[i][0]>nodes[i+1][0] and nodes[i][1]>nodes[i+1][1]): 
                 p1=nodes[i+1]
@@ -36,20 +36,20 @@ def querybox(nodes,category,proximity=0.01):
             latoffmax=p0[0]+latoffset
             latoffmin=p0[0]-latoffset
             lonoffmax=p0[1]+lonoffset
-            lonoffmin=p0[1]-lonoffset
+            lonoffmin=p0[1]-lonoffset 
             lonmax=max(p1[1],p0[1])
             lonmin=min(p1[1],p0[1])
             latmax=max(p1[0],p0[0])
             latmin=min(p1[0],p0[0])
 
         
-            querystring="SELECT name,stars,latitude,longitude FROM yelp_business WHERE categories LIKE \'%{0}%\' AND (longitude>(latitude-{1})*{2} + {3}) AND (longitude<(latitude-{4})*{5} + {6}) AND (longitude > {7}) AND (longitude < {8}) AND (latitude < {9}) AND (latitude > {10})".format(category,latoffmax,slope,lonoffmax,latoffmin,slope,lonoffmin,lonmin,lonmax,latmax,latmin)
+            querystring="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories LIKE \'%{0}%\' AND (longitude>(latitude-{1})*{2} + {3}) AND (longitude<(latitude-{4})*{5} + {6}) AND (longitude > {7}) AND (longitude < {8}) AND (latitude < {9}) AND (latitude > {10})".format(category,latoffmax,slope,lonoffmax,latoffmin,slope,lonoffmin,lonmin,lonmax,latmax,latmin)
                 
         #print "QUERYSTRING = ",querystring
             cur.execute(querystring)
             r= cur.fetchall()
             a=a+list(r)
-            print "LENGTH of r = ",len(r), "LENGTH of a = ",len(a)
+            print "LENGTH of r = ",len(r), "LENGTH of a = ",len(a)," tries = ",tries
             proximity=proximity*3
             tries+=1
         
@@ -63,8 +63,9 @@ def getslope(p0,p1):
         s=(p1[1]-p0[1])/(p1[0]-p0[0])
     else:
         s=1000
-
-    print "SLOPE = ", s
+    if s==0:
+        s=0.001
+    
     return s 
 
 def getdistance(p0,p1):
