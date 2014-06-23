@@ -11,7 +11,7 @@ import pandas as pd
 
 #=====================================================
 def querybox(nodes,category,proximity=0.01):
-    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='', db='yelp_phoenix')
+    conn = pymysql.connect(host='miway.cxfcf9a4yvmp.us-west-1.rds.amazonaws.com', port=3306, user='sam', passwd='cavalobatata', db='yelp_phoenix')
     cur = conn.cursor()
 
     nnodes=len(nodes)
