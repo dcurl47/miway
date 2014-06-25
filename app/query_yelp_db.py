@@ -2,16 +2,14 @@ import pymysql
 from numpy import sqrt
 import pandas as pd
 
-#from "settings/development.cfg" import DATABASE_USER,DATABASE_PASSWORD
-
+from app import app, host, port, user, passwd, db
 
 
 
 #=====================================================
 def querybox(nodes,category,proximity=0.01):
 
-    conn = pymysql.connect(host='miway.cxfcf9a4yvmp.us-west-1.rds.amazonaws.com', port=3306, user='sam', passwd='cavalobatata', db='yelp_phoenix')
-
+    conn = pymysql.connect(host=host, port=port, user=user, passwd=passwd, db=db)
     cur = conn.cursor()
 
     nnodes=len(nodes)
