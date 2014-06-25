@@ -67,6 +67,7 @@ def login():
         routenodes = utils.getnodes(mapjson,detail)
 #--------------------------------	
 #call my test database (yelp_phoenix)
+#and get coarse batch of locations.
 #--------------------------------	
 
         if phoenix:
@@ -87,7 +88,7 @@ def login():
 #phoenix ranking analytics
 #--------------------------------
             dphoenix=pd.DataFrame(phoenixlist,columns=['id','name','ratings','lat','lon'])
-            #print "DPHOENIX ID = ",dphoenix['id']
+            
             dphoenix['dist']=sqrt((dphoenix['lat']-dphoenix['lat'][0])**2+(dphoenix['lon']-dphoenix['lon'][0])**2)
             last=dphoenix.last_valid_index()
             totdist=sqrt((dphoenix['lat'][last]-dphoenix['lat'][0])**2+(dphoenix['lon'][last]-dphoenix['lon'][0])**2)
@@ -128,8 +129,7 @@ def login():
                                 "  " +str(jsonObj["places"][i]['lon']))
                 placenames.append(jsonObj["places"][i]['name'])
             rickyelp=[w.replace('  ',',') for w in ricklist]
-            #print "RICKYELP = ",rickyelp
-            #print "RICKLIST = ",ricklist        
+                   
 
 #---------------------------------------------
 #end of separation between rick and phoenix.
@@ -140,7 +140,8 @@ def login():
 #get Yelp reviews and business urls.
 #------------------------------------
 
- 
+        print "RICKYELP = ",rickyelp
+        print "RICKLIST = ",ricklist 
         (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
 
         print "YELP LOCATION: ",yelp_location
@@ -160,9 +161,10 @@ def login():
         mquest=mapquest_utils.mapquest()
         startlist=[str(start)]
 	endlist=[str(end)]
+        print "STARTLIST = ", startlist
+        print "Ricklist = ",ricklist
         
-        
-        timeoff,fracoff,routelength,routetime = mquest.timeoffroute(ricklist,startlist,endlist)
+        timeoff,fracoff,routelength,routetime,startgmap,endgmap,locgmap = mquest.timeoffroute(ricklist,startlist,endlist)
         routehours=routetime//3600
         routemins=(routetime%3600)//60
 
@@ -175,8 +177,9 @@ def login():
 #------------------------------------
 #Render template
 #------------------------------------
-            
-        return render_template('results.html',timeoff=timeoff,fracoff=fracoff,routelength=routelength,routehours=routehours,routemins=routemins,places=yelp_names,ratings=ratings,yelp_urls=yelp_urls,gmaps_urls=gmaps_urls)
+        
+        
+        return render_template('results.html',timeoff=timeoff,fracoff=fracoff,routelength=routelength,routehours=routehours,routemins=routemins,places=yelp_names,ratings=ratings,yelp_urls=yelp_urls,gmaps_urls=gmaps_urls,start=startgmap,end=endgmap,locgmap=locgmap)
     
     else:
         return render_template('login.html', title = 'miWay',form = form)
@@ -188,8 +191,8 @@ def login():
 ###########################################################
 @app.route('/map', methods = ['GET'])
 def maps():
-    tmp = request.args.get("x")
-    print tmp
+    #tmp = request.args.get("x")
+    #print tmp
     
 
     return render_template('map.html')

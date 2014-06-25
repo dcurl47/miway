@@ -1,15 +1,39 @@
 {% extends "layout/base.html" %}
 <br><br><br>
+
+{% block head %}
+<link rel="stylesheet"  href="{{ url_for('static', filename='css/CSSTableGenerator.css') }}" type="text/css"/>
+<link rel="stylesheet"  href="{{ url_for('static',filename='css/jquery-ui.css')}}" type="text/css"/>
+<link rel="stylesheet"  href="{{url_for('static',filename='css/style.css')}}" type="text/css"/>
+<script src="{{ url_for('static', filename='js/jquery-1.10.2.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
+
+  <script>
+  $(function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 0,
+      max: 500,
+      values: [ 75, 300 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  });
+  </script>
+{% endblock %}
+
 {% block content %}
+
+
 <div class="container" style="margin-left:40px;">
   <form action="" method="post" name="login">
   {{form.hidden_tag()}}
   <p>
   <br><br><br><br>
-<<<<<<< HEAD
- 
-  PHoenix Start:<br>
-=======
+
 
    <div class="row">
         <div class="col-sm-3">
@@ -21,7 +45,7 @@
 
   <br>
   Start:<br>
->>>>>>> 49c304fc0002dcdac7979b752264bc0761cb7b70
+
    
   {{form.start(size=40)}}<br>
   {% for error in form.errors.start %}
@@ -33,7 +57,7 @@
   <span style="color: red;">[{{error}}]</span>
   {% endfor %}<br>
 </div>
-<div class="container" style="margin-left:40px;">
+<div class="container" style="margin-left:40px; ">
     <div class="row">
         <div class="col-sm-3">
 	  Stop on the way:<br>{{form.place}}
@@ -43,13 +67,20 @@
 	</div>
     </div>
     <br><br>
+    
     <p><input type="submit" value="Find Route!"></p>
 </div>
   </p>
-  <!-- <p>{{form.remember_me}} Remember Me</p> -->
 
-<!--  </form>-->
+<!-- <p> -->
+<!--   <label for="amount">Price range:</label> -->
+<!--   <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"> -->
+<!-- </p> -->
+ 
+<div id="slider-range"></div>
+
 {% endblock %}
+<<<<<<< HEAD
   <!--<table>
     <tr>
        <input type="text" name="start">
@@ -60,3 +91,5 @@
   </table> 
  <div class="form-group">
   <label for="start">Start</label>-->
+=======
+>>>>>>> 24b7627a05fb46732582c6214c2ef1efe7b6906c

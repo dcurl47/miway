@@ -1,7 +1,46 @@
-{% extends "layout/base.html" %}
-{% block content %}
-<h1>Hi, {{user.nickname}}!</h1>
-{% for post in posts %}
-<div><p>{{post.author.nickname}} says: <b>{{post.body}}</b></p></div>
-{% endfor %}
-{% endblock %}
+
+
+function addMarkers() {
+	addMarker({{start[0]}},{{start[1]}}, "<div class=\"map_label_font\">Start</div>");
+	{% for loc in locations %}
+  	addMarker({{loc[-4]}},{{loc[-3]}}, "<div class=\"map_label_font\">{{loop.index}}. {{loc[1]}}</div>");
+  	{% endfor %}
+}
+
+/*
+function calcRoute() {
+  	var start = new google.maps.LatLng({{start[0]}},{{start[1]}});
+  	var end = new google.maps.LatLng({{start[0]}},{{start[1]}});
+ 	var waypoints = [];
+ 	{% for loc in locations %} 	
+  	waypoints.push({location:new google.maps.LatLng({{loc[-4]}},{{loc[-3]}})});
+  	{% endfor %}
+  	var request = {
+  		origin:start,
+  		destination:end,
+  		travelMode: google.maps.TravelMode.DRIVING,
+  		waypoints: waypoints
+  	};
+  	directionsService.route(request, function(response, status) {
+  		if (status == google.maps.DirectionsStatus.OK) {
+    		directionsDisplay.setDirections(response);
+    		var route = response.routes[0];
+    		var total_distance = 0;
+    		var total_time = 0;
+    		for (var i = 0; i < route.legs.length; i++){
+      			var distance = route.legs[i].distance;
+      			var duration = route.legs[i].duration;
+				total_distance += distance.value;
+				total_time += duration.value;
+			};
+			addTravelInfo(total_distance, total_time);
+     	}
+	});
+}
+*/
+
+	function addSuggestion(){
+	var div = document.getElementById("suggestion");
+	div.innerHTML = 'You may also want to visit: <a style="font-weight:bold" href="{{suggestion[1]}}">{{suggestion[0]}}</a>';
+	addMarker({{suggestion[2]}}, {{suggestion[3]}}, "<div class=\"map_label_font\" style=\"color:blue\">{{suggestion[0]}}</div>");
+}

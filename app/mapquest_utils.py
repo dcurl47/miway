@@ -50,6 +50,7 @@ class mapquest():
         startjson=self.getonetomany(strick)
         endjson=self.getmanytoone(endrick)
         fidjson=self.getonetomany(fidroute)
+        #print json.dumps(fidjson, indent=4, sort_keys=True)
 
         totaltime=map(add,startjson['time'],endjson['time'])
         fidtime=fidjson['time'][1]
@@ -67,8 +68,15 @@ class mapquest():
 
         fracoffroute=[float(int(x*100)) for x in fracoffroute]
         fiddist=int(10*fiddist)/10.
-                      
-        return toffroute,fracoffroute,fiddist,fidtime
+
+        start=[fidjson["locations"][0]["latLng"]["lat"],fidjson["locations"][0]["latLng"]["lng"]]
+        end=[fidjson["locations"][-1]["latLng"]["lat"],fidjson["locations"][-1]["latLng"]["lng"]]
+
+        locgmap=[]
+        for i in range(1,len(startjson["locations"])):
+            locgmap.append([startjson["locations"][i]["latLng"]["lat"],startjson["locations"][i]["latLng"]["lng"]])
+        
+        return toffroute,fracoffroute,fiddist,fidtime,start,end,locgmap
 
 
         

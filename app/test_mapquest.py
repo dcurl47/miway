@@ -13,6 +13,7 @@ end='Kirkwood, CA'
 #loclist=["Kirkwood, CA", "Los Angeles, CA", "San Diego, CA", "Las Vegas, NV", "Portland, OR", "Salt Lake City, UT","Redmond, WA","Santa Barbara, CA","Riverside, CA","Eureka,CA","Medford,OR"]
 
 loclist=["Chevron Pollock Pines, CA", "Los Angeles, CA", "San Diego, CA", "Las Vegas, NV", "Portland, OR", "Salt Lake City, UT","Redmond, WA","Santa Barbara, CA","Riverside, CA","Eureka,CA","Medford,OR"]
+#loclist=["Chevron Pollock Pines, CA", "Los Angeles, CA"]
 
 locations = '{locations: '+str(loclist)+', options: {allToAll:false}}'
 
@@ -21,16 +22,16 @@ mquest=mapquest()
 
  
 # # make request
-# response = mquest.onetomany(locations)
+response = mquest.getonetomany(loclist)
 # ==============
 
 # # parse result
-# jsonObj = json.loads(jsonRcv)
-# #print json.dumps(jsonObj, indent=4, sort_keys=True)
+#jsonObj = json.loads(response)
+print json.dumps(response, indent=4, sort_keys=True)
 
-check=mquest.getonetomany(loclist)
-startlist=["Kirkwood, CA"]
-endlist=["Menlo Park, CA"]
+#check=mquest.getonetomany(loclist)
+#startlist=["Kirkwood, CA"]
+#endlist=["Menlo Park, CA"]
 
-time=mquest.timeoffroute(loclist,startlist,endlist)
+#time=mquest.timeoffroute(loclist,startlist,endlist)
  
