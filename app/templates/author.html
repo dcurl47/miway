@@ -1,21 +1,28 @@
 {% extends "layout/base.html" %}
-
+{% block head %}
+<style>
+body {
+    background-color: #A55;
+    background-size:cover;
+    font-color:#fff;
+}
+</style>
+{% endblock %}
 {% block content %}
   <div id="wrap">
     <div class="container">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-sm-4">
             <img src="{{ url_for('static',
   filename='images/grandcanyon.jpg') }}"
                  class="img-responsive" height="300px" width="300px"/>
           </div>
-          <div class="col-md-5">
+          <div class="col-sm-4">
             <!-- <h1 class="text-justify text-muted">GET IN TOUCH</h1> -->
-            <p class="lead">Thanks for checking out my website.</p> 
-            <p class="lead">
-              Have feedback or want to contribute, submit a
-              <a href="https://github.com/dcurl47/miway">pull request</a>.
+            <p class="lead" font-color="#FFFFFF">Thanks for checking out my website.</p> 
+            <p class="lead">Have feedback or want to contribute?</p>
+	    <p class="lead"> Submit a <a href="https://github.com/dcurl47/miway">pull request</a>.
             </p>
           </div>
         </div>

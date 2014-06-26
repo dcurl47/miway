@@ -42,16 +42,17 @@ $(function() {
                 <form action="" method="post" name="login">
                     {{form.hidden_tag()}}
 
-
 		    <div class="form-group">
-                    <!--{{form.start.label}}--><strong>Start:</strong> {{form.start(size=40,placeholder="Phoenix,AZ",class_="form-control")}}
+                    <!--{{form.start.label}}--><strong>Start:</strong>
+                    {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}}
                     {% for error in form.errors.start %}
                     <span style="color: red;">[{{error}}]</span>
                     {% endfor %}
 		    </div>
 		    <div class="form-group">
 		    
-                    <!--{{form.end.label}}--><strong>End:</strong> {{form.end(size=40,placeholder="Tempe,AZ",class_="form-control")}}
+                    <!--{{form.end.label}}--><strong>End:</strong>
+		    {{form.end(size=40,placeholder="E.g. 5773 S 32nd St, Phoenix, AZ",class_="form-control")}}
 		    {% for error in form.errors.end %}
                     <span style="color: red;">[{{error}}]</span>
                     {% endfor %}
@@ -62,7 +63,7 @@ $(function() {
                         <!--{{form.place.label}}--><strong>Where to Stop:</strong> {{form.place(class_="form-control")}}
                         </div>
 		    </div>
-		    <div class="col-sm-8">
+		    <div class="col-sm-6">
                         <div class="form-group">
                         <!--{{form.partroute.label}}--><strong>When to Stop:</strong> {{form.partroute(class_="form-control")}}
                         </div>
