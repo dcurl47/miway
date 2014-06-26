@@ -75,7 +75,7 @@ class mapquest():
         locgmap=[]
         for i in range(1,len(startjson["locations"])):
             locgmap.append([startjson["locations"][i]["latLng"]["lat"],startjson["locations"][i]["latLng"]["lng"]])
-        
+        print "START = ",start,"END = ",end
         return toffroute,fracoffroute,fiddist,fidtime,start,end,locgmap
 
 
