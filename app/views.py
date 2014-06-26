@@ -22,6 +22,9 @@ from numpy import sqrt
 # within your view functions:
 # con = con_db(host, port, user, passwd, db)
 
+if __name__ == "__main__":
+    app.run(host='0.0.0.0',port=5000)
+
 #=====================================
 #Main Page:
 #=====================================

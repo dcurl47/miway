@@ -8,6 +8,7 @@ from app import app, host, port, user, passwd, db
 
 #=====================================================
 def querybox(nodes,category,proximity=0.01):
+
     conn = pymysql.connect(host=host, port=port, user=user, passwd=passwd, db=db)
     cur = conn.cursor()
 

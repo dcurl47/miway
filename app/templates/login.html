@@ -41,7 +41,7 @@ $(function() {
             <div class="panel-body">
                 <form action="" method="post" name="login">
                     {{form.hidden_tag()}}
-                    
+
 
 		    <div class="form-group">
                     {{form.start.label}}{{form.start(size=40,placeholder="Phoenix,AZ",class_="form-control")}}
@@ -88,55 +88,6 @@ $(function() {
                 </div>
             </div>
         </div>
-	</div>
-        <!--
-            <form action="" method="post" name="login">
-                {{form.hidden_tag()}}
-                <p>
-                    <br><br><br><br>
 
-                    <div class="row">
-                        <div class="col-sm-3">
-                            {%for error in notfound %}
-                            <span style="color: red;">{{error}}</span><br>
-                            {% endfor %}
-                        </div>
-                    </div>
 
-                    <br>
-                    Start:<br>
-
-                    {{form.start(size=40)}}<br>
-                    {% for error in form.errors.start %}
-                    <span style="color: red;">[{{error}}]</span>
-                    {% endfor %}<br><br>
-                    End:<br>
-                    {{form.end(size=40)}}<br>
-                    {% for error in form.errors.end %}
-                    <span style="color: red;">[{{error}}]</span>
-                    {% endfor %}<br>
-                </div>
-
-                <div class="container" style="margin-left:40px; ">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            Stop on the way:<br>{{form.place}}
-                        </div>
-                        <div class="col-sm-2">
-                            When to stop:<br>{{form.partroute}}
-                        </div>
-                    </div>
-                    <br><br>
-
-                    <p><input type="submit" value="Find Route!"></p>
-                </div>
-            </p>-->
-
-            <!-- <p> -->
-                <!--   <label for="amount">Price range:</label> -->
-                <!--   <input type="text" id="amount" style="border:0; color:#f6931f; font-weight:bold;"> -->
-                <!-- </p> -->
-
-                <div id="slider-range"></div>
-
-                {% endblock %}
+{% endblock %}
