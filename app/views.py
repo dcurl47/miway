@@ -167,7 +167,7 @@ def login():
         timeoff,fracoff,routelength,routetime,startgmap,endgmap,locgmap = mquest.timeoffroute(ricklist,startlist,endlist)
         routehours=routetime//3600
         routemins=(routetime%3600)//60
-
+        print "LENGTH OF RICKLIST = ",len(ricklist), "LENGTH OF LOCGMAP - ",locgmap,"  LENGTH OF ROUTELENGTH = ",routelength,"  LENGTH OF ROUTETIME = ",routetime
 #------------------------------------
 #make Google maps urls.
 #------------------------------------
