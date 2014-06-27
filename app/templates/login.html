@@ -14,6 +14,9 @@ body {
 
 }
 </style>
+<!-- =====================================  -->
+<!-- Make a slider bar (currently not used) -->
+<!-- =====================================  -->
 <script>
 $(function() {
     $( "#slider-range" ).slider({
@@ -35,63 +38,61 @@ $(function() {
 
 
 <div class="container" style="padding-top:90px;">
-    <div class="row">
-      
-      <div class="col-md-6 col-md-offset-3">
-        <!--- <div class="panel panel-primary">
-            <div class="panel-body"> -->
-	      <div class="well">
-                <form action="" method="post" name="login">
-                    {{form.hidden_tag()}}
-
-		    <div class="form-group">
-                    <!--{{form.start.label}}--><strong>Start:</strong>
-                    {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}}
-                    {% for error in form.errors.start %}
-                    <span style="color: red;">[{{error}}]</span>
-                    {% endfor %}
-		    </div>
-		    <div class="form-group">
-		    
-                    <!--{{form.end.label}}--><strong>End:</strong>
-		    {{form.end(size=40,placeholder="E.g. 5773 S 32nd St, Phoenix, AZ",class_="form-control")}}
-		    {% for error in form.errors.end %}
-                    <span style="color: red;">[{{error}}]</span>
-                    {% endfor %}
-		    <!--</div> --->
-		    <br/>
-		    <div class="col-sm-6">
-		    <div class="form-group">
-                        <!--<div class="col-sm-3">-->
-                        <!--{{form.place.label}}--><strong>Where to Stop:</strong> {{form.place(class_="form-control")}}
-                        </div>
-		    </div>
-		    <div class="col-sm-6">
-                        <div class="form-group">
-                        <!--{{form.partroute.label}}--><strong>When to Stop:</strong> {{form.partroute(class_="form-control")}}
-                        </div>
-                    </div>
-		    </div>
-		    
-		    <div class="form-group">
-                    <input type="submit" class="btn btn-success btn-lg
-                    center-block" value="Find Route!">
-                    {% if notfound %}
-		    <div class="alert alert-danger">
-		     {%for error in notfound %}
-                   <p>{{error}}</p>
-		   
+     <div class="row">
+         <div class="col-md-6 col-md-offset-3">
+               <!--- <div class="panel panel-primary">
+               <div class="panel-body"> -->
+	       <div class="well">
+                  <form action="" method="post" name="login">
+                     {{form.hidden_tag()}}
+		     <!-- =====================================  -->
+		     <!-- Display form with examples -->
+		     <!-- =====================================  -->
+		     <div class="form-group">
+                        <!--{{form.start.label}}--><strong>Start (temporarily only
+     works in Phoenix):</strong>
+                        {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}}
+                        {% for error in form.errors.start %}
+                           <span style="color: red;">[{{error}}]</span>
                         {% endfor %}
-		   </div>
-		   {% endif %}
-		   </div>
-
-                        
+		     </div>
+		     <div class="form-group">
+		    
+                        <!--{{form.end.label}}--><strong>End:</strong>
+		        {{form.end(size=40,placeholder="E.g. 5773 S 32nd St, Phoenix, AZ",class_="form-control")}}
+		        {% for error in form.errors.end %}
+                           <span style="color: red;">[{{error}}]</span>
+                        {% endfor %}
+		        <br/>
+		     <div class="col-sm-6">
+		        <div class="form-group">
+                           <!--<div class="col-sm-3">-->
+                           <!--{{form.place.label}}--><strong>Where to Stop:</strong> {{form.place(class_="form-control")}}
+                        </div>
+		     </div>
+		     <div class="col-sm-6">
+                        <div class="form-group">
+                           <!--{{form.partroute.label}}--><strong>When to Stop:</strong> {{form.partroute(class_="form-control")}}
+                        </div>
+                     </div>
+	             
+	             <!-- =====================================  -->
+	             <!-- Submit form - return error messages if needed. -->
+	             <!-- =====================================  -->
+	             <div class="form-group">
+		       <input type="submit" class="btn btn-success btn-lg center-block" value="Find Route!">
+		       {% if notfound %}
+		           <div class="alert alert-danger">
+		              {%for error in notfound %}
+		                <p>{{error}}</p>
+		              {% endfor %}
+		           </div>
+		       {% endif %}
+	             </div>
                     
-		   </form>
-               <!--- </div>
-		</div> -->
-</div>
+	          </form>
+	      </div>
+      </div>
 </div>
 
 

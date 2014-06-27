@@ -57,8 +57,6 @@ def mkgoogleurls(startlist,endlist,locations):
     return gmaps_urls
 
 
-
-
 def getpartscore(routepart):
 
     
@@ -87,7 +85,3 @@ def convertformat(dphoenix):
     return ricklist,ratings,yelp_names,rickyelp,yelp_location,yelp_id
 
 
-def myfunc(x,mean=0.5,sig=1.0):
-    #global mean
-    #global sig
-    return exp(-((x['frac']-mean)/sig)**2/2)/(sig*2.506628)

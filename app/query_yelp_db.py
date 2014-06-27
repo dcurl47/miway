@@ -11,6 +11,11 @@ def querybox(nodes,category,proximity=0.01):
 
     conn = pymysql.connect(host=host, port=port, user=user, passwd=passwd, db=db)
     cur = conn.cursor()
+    
+    if category=="hotel":
+        querytemp="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories NOT LIKE \'%Car%\' AND categories NOT LIKE \'%Transportation%\' AND categories NOT LIKE \'%taxi%\'  AND categories NOT LIKE \'%airlines%\' AND categories "
+    else:
+        querytemp="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories "
 
     nnodes=len(nodes)
     print "NODES =", nodes
@@ -40,8 +45,8 @@ def querybox(nodes,category,proximity=0.01):
             latmax=max(p1[0],p0[0])
             latmin=min(p1[0],p0[0])
 
-        
-            querystring="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories LIKE \'%{0}%\' AND (longitude>(latitude-{1})*{2} + {3}) AND (longitude<(latitude-{4})*{5} + {6}) AND (longitude > {7}) AND (longitude < {8}) AND (latitude < {9}) AND (latitude > {10})".format(category,latoffmax,slope,lonoffmax,latoffmin,slope,lonoffmin,lonmin,lonmax,latmax,latmin)
+            querystring=querytemp + " LIKE \'%{0}%\' AND (longitude>(latitude-{1})*{2} + {3}) AND (longitude<(latitude-{4})*{5} + {6}) AND (longitude > {7}) AND (longitude < {8}) AND (latitude < {9}) AND (latitude > {10})".format(category,latoffmax,slope,lonoffmax,latoffmin,slope,lonoffmin,lonmin,lonmax,latmax,latmin) 
+            #querystring="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories LIKE \'%{0}%\' AND (longitude>(latitude-{1})*{2} + {3}) AND (longitude<(latitude-{4})*{5} + {6}) AND (longitude > {7}) AND (longitude < {8}) AND (latitude < {9}) AND (latitude > {10})".format(category,latoffmax,slope,lonoffmax,latoffmin,slope,lonoffmin,lonmin,lonmax,latmax,latmin)
                 
         #print "QUERYSTRING = ",querystring
             cur.execute(querystring)

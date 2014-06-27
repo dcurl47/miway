@@ -69,7 +69,7 @@
    <tr>
      <td width=30%> <a href={{gmaps_urls[loop.index-1]}}>{{places[loop.index-1]}}:</a></td>
      <td style="text-align:center"> <b>{{timeoff[loop.index]}}</b> minutes </td> 
-     <td style="text-align:center"> <b>{{fracoff[loop.index]}} %</b></td> 
+     <td style="text-align:center"> <b>{{fracoff[loop.index]}}%</b></td> 
      <td style="text-align:center"> <a href={{yelp_urls[loop.index-1]}}> {{ratings[loop.index-1]}} </a></td>
    </tr>
 
@@ -91,10 +91,6 @@ var map;
 function initialize() {
 	directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers:true});
   	var mapOptions = {};
-        var mapOptions = {
-          //center: new google.maps.LatLng(-34.397, 150.644),
-          //zoom: 8
-        };
         map = new
 	google.maps.Map(document.getElementById('map-canvas'),mapOptions);
 
@@ -104,13 +100,13 @@ function initialize() {
 
 }
 function addMarkers() {
-	addMarker({{start[0]}},{{start[1]}},"00DE56");
-	addMarker({{end[0]}},{{end[1]}},"CC0056");
-	{% for place in places %}
-	addMarker({{locgmap[loop.index-1][0]}},{{locgmap[loop.index-1][1]}},"FFDE56","{{place}}","{{ratings[loop.index-1]}}","{{gmaps_urls[loop.index-1]}}","{{yelp_urls[loop.index-1]}}");
+	addMarkerstartend({{start[0]}},{{start[1]}},"00DE56","Start");
+	addMarkerstartend({{end[0]}},{{end[1]}},"CC0056","End");
+        {% for place in places %}
+	    addMarker({{locgmap[loop.index-1][0]}},{{locgmap[loop.index-1][1]}},"FFDE56","{{place}}","{{ratings[loop.index-1]}}","{{gmaps_urls[loop.index-1]}}","{{yelp_urls[loop.index-1]}}");
   	{% endfor %}
 	//{% for loc in locgmap %}
-	//addMarker({{loc[0]}},{{loc[1]}},"FFDE56","{{places[loop.index-1]}}","{{ratings[loop.index-1]}}","{{gmaps_urls[loop.index-1]}}","{{yelp_urls[loop.index-1]}}");
+	   //addMarker({{loc[0]}},{{loc[1]}},"FFDE56","{{places[loop.index-1]}}","{{ratings[loop.index-1]}}","{{gmaps_urls[loop.index-1]}}","{{yelp_urls[loop.index-1]}}");
   	//{% endfor %}
 }
 	
@@ -124,6 +120,44 @@ function addMarker(latitude, longitude, pincl, text,rating,gmap,yelp) {
       'Yelp rating: '+rating+' </a></p> '+
 	'<p> <a href='+gmap+'>'+
       'Directions </a></p> '+
+      '</div>'+
+      '</div>';
+	console.log('Adding marker' + text);
+	var start = new google.maps.LatLng(latitude, longitude);
+	var pinColor = pincl;
+	var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34));
+	var pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+        new google.maps.Size(40, 37),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12, 35));
+	
+	//var marker = new google.maps.Marker({position: start, map: map});
+	var marker = new google.maps.Marker({
+                position: start, 
+                map: map,
+                icon: pinImage,
+	        animation: google.maps.Animation.DROP,
+                shadow: pinShadow
+            });
+	var infowindow = new google.maps.InfoWindow({content: contentString});
+
+	google.maps.event.addListener(marker, 'click', function() {
+	      infowindow.open(map,marker);
+	});
+}
+function addMarkerstartend(latitude, longitude, pincl, text) {
+	var contentString = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<div id="bodyContent">'+
+      '<p><b>' +text+'</b></p>'+
+      //'<p> <a href='+yelp+'>'+
+      //'Yelp rating: '+rating+' </a></p> '+
+	//'<p> <a href='+gmap+'>'+
+      //'Directions </a></p> '+
       '</div>'+
       '</div>';
 	console.log('Adding marker' + text);

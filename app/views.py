@@ -33,12 +33,17 @@ if __name__ == "__main__":
 @app.route('/', methods = ['GET', 'POST'])    
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-    limit=1
+    limit=1   #number of results per Yelp api query.
     nroute=25  #Maximum number of routes to calculate
     sigma=0.3  #to be used in ranking of results
     phoenix=True #Use rick_api if False, phoenix api if True
 
-    
+
+
+# ---------------------------------------------
+# Read the form from login.html
+# ---------------------------------------------
+
     form = LoginForm()
     if form.validate_on_submit():
         flash('Start at"' + str(form.start.data) +'End at"' + str(form.end.data) )
@@ -64,7 +69,8 @@ def login():
 	mapresponse=mquest.advanceddirections(start,end)
         mapjson=json.loads(mapresponse.read())
 
-        detail=0
+        detail=0 #0: nodes=steps in the directions
+                 #1: much finer resolution, based on full route path.
         routenodes = utils.getnodes(mapjson,detail)
 #--------------------------------	
 #call my test database (yelp_phoenix)
@@ -128,10 +134,10 @@ def login():
         (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
 
         
-#===========================================================
+#--------------------------------------------------
 #run Mapquest Route matrix to get time off-route, 
 #  distance along route and shortest route
-#===========================================================
+#--------------------------------------------------
 
         mquest=mapquest_utils.mapquest()
         startlist=[str(start)]
