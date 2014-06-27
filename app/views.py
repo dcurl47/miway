@@ -16,6 +16,7 @@ import mapquest_utils
 import yelp_search
 import query_yelp_db  #for phoenix db
 import utils
+import analytics
 import pandas as pd
 from numpy import sqrt
 # To create a database connection, add the following
@@ -87,30 +88,14 @@ def login():
 #--------------------------------	
 #phoenix ranking analytics
 #--------------------------------
-            dphoenix=pd.DataFrame(phoenixlist,columns=['id','name','ratings','lat','lon'])
-            
-            dphoenix['dist']=sqrt((dphoenix['lat']-dphoenix['lat'][0])**2+(dphoenix['lon']-dphoenix['lon'][0])**2)
-            last=dphoenix.last_valid_index()
-            totdist=sqrt((dphoenix['lat'][last]-dphoenix['lat'][0])**2+(dphoenix['lon'][last]-dphoenix['lon'][0])**2)
 
-            dphoenix['frac']=dphoenix['dist']/totdist
-            dphoenix['score']=dphoenix.apply(utils.myfunc,axis=1,mean=partscore,sig=sigma)
-               
-            dphoenix['strpos']=dphoenix['lat'].astype('str')+" "+dphoenix['lon'].astype('str')
-            dphoenix['yelpos']=dphoenix['lat'].astype('str')+","+dphoenix['lon'].astype('str')
-            dphoenix=dphoenix.sort(columns='score',ascending=False) #sort by score
-                
-            nplaces=len(dphoenix)
-            if nplaces > nroute: #keep at most nroute number of results
-                dphoenix=dphoenix.drop(dphoenix.index[nroute:])
-                nplaces=nroute
-
+            dphoenix=analytics.analytics(phoenixlist,nroute,partscore,sigma)
 #--------------------------------	
 #convert phoenix results to
 #previous format
 #--------------------------------
             (ricklist,ratings,yelp_names,rickyelp,yelp_location,yelp_id)=utils.convertformat(dphoenix)
-            print "FIRST NAME = ", yelp_names[0], yelp_location[0], yelp_id[0]
+            
         else:
 #--------------------------------	
 #call Rick's api
@@ -140,17 +125,7 @@ def login():
 #get Yelp reviews and business urls.
 #------------------------------------
 
-        print "RICKYELP = ",rickyelp
-        print "RICKLIST = ",ricklist 
         (yelp_location,yelp_names,yelp_urls,ratings)=yelp_search.get_yelp_info(limit,rickyelp,category)
-
-        print "YELP LOCATION: ",yelp_location
-
-#===========================================================
-#Analytics to choose which places to get time off-route for
-#and which to display on website
-#===========================================================
-
 
         
 #===========================================================
@@ -161,13 +136,11 @@ def login():
         mquest=mapquest_utils.mapquest()
         startlist=[str(start)]
 	endlist=[str(end)]
-        print "STARTLIST = ", startlist
-        print "Ricklist = ",ricklist
         
         timeoff,fracoff,routelength,routetime,startgmap,endgmap,locgmap = mquest.timeoffroute(ricklist,startlist,endlist)
         routehours=routetime//3600
         routemins=(routetime%3600)//60
-        print "LENGTH OF RICKLIST = ",len(ricklist), "LENGTH OF LOCGMAP - ",locgmap,"  LENGTH OF ROUTELENGTH = ",routelength,"  LENGTH OF ROUTETIME = ",routetime
+
 #------------------------------------
 #make Google maps urls.
 #------------------------------------
@@ -191,16 +164,9 @@ def login():
 ###########################################################
 @app.route('/map', methods = ['GET'])
 def maps():
-    #tmp = request.args.get("x")
-    #print tmp
-    
 
     return render_template('map.html')
 
-@app.route('/home')
-def home():
-    # Renders home.html.
-    return render_template('home.html')
 
 @app.route('/slides')
 def about():
