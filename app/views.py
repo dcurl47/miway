@@ -19,9 +19,7 @@ import utils
 import analytics
 import pandas as pd
 from numpy import sqrt
-# To create a database connection, add the following
-# within your view functions:
-# con = con_db(host, port, user, passwd, db)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=5000)
@@ -83,7 +81,7 @@ def login():
                 thick=0.01
             if category=="pharmacy":
                 thick=0.9
-                
+            
             phoenixlist=query_yelp_db.querybox(routenodes,category,thick)
         
             if len(phoenixlist)<1:
@@ -161,7 +159,7 @@ def login():
         return render_template('results.html',timeoff=timeoff,fracoff=fracoff,routelength=routelength,routehours=routehours,routemins=routemins,places=yelp_names,ratings=ratings,yelp_urls=yelp_urls,gmaps_urls=gmaps_urls,start=startgmap,end=endgmap,locgmap=locgmap)
     
     else:
-        return render_template('login.html', title = 'miWay',form = form)
+        return render_template('login.html', title = 'Jaunt',form = form)
 
 
 

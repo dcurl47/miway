@@ -46,4 +46,4 @@ def analytics(phoenixlist,nroute,partscore,sigma):
 def myfunc(x,mean=0.5,sig=1.0):
     #global mean
     #global sig
-    return exp(-((x['frac']-mean)/sig)**2/2)/(sig*2.506628)
+    return x['ratings']*exp(-((x['frac']-mean)/sig)**2/2)/(sig*2.506628)

@@ -64,7 +64,7 @@ class mapquest():
         #Round-off and convert units
 
         toffroute=[0 if x<0 else x for x in toffroute]
-        toffroute=[int(x/60.) for x in toffroute]  #convert to minutes
+        toffroute=[int(x/60. +0.5) for x in toffroute]  #convert to minutes
 
         fracoffroute=[float(int(x*100)) for x in fracoffroute]
         fiddist=int(10*fiddist)/10.
@@ -103,6 +103,9 @@ class mapquest():
 
 
     ##################################################
-    #mquest=mapquest()
-    #response=mquest.advanceddirections("kirkwood, ca","cupertino,ca")
-    #jsonobj=json.loads(response.read())
+if __name__=="__main__":
+        
+    mquest=mapquest()
+    response=mquest.advanceddirections("kirkwood, ca","cupertino,ca")
+    jsonobj=json.loads(response.read())
+    print json.dumps(jsonobj, indent=4, sort_keys=True)

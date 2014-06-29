@@ -13,7 +13,7 @@ def querybox(nodes,category,proximity=0.01):
     cur = conn.cursor()
     
     if category=="hotel":
-        querytemp="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories NOT LIKE \'%Car%\' AND categories NOT LIKE \'%Transportation%\' AND categories NOT LIKE \'%taxi%\'  AND categories NOT LIKE \'%airlines%\' AND categories "
+        querytemp="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories NOT LIKE \'%Rental%\' AND categories NOT LIKE \'%Transportation%\' AND categories NOT LIKE \'%taxi%\'  AND categories NOT LIKE \'%airlines%\' AND categories "
     else:
         querytemp="SELECT id,name,stars,latitude,longitude FROM yelp_business WHERE categories "
 
@@ -54,7 +54,7 @@ def querybox(nodes,category,proximity=0.01):
             a=a+list(r)
             print "LENGTH of r = ",len(r), "LENGTH of a = ",len(a)," tries = ",tries
             proximity=proximity*3
-            tries+=1
+        tries+=1
         
     return  a 
 
@@ -87,5 +87,4 @@ if __name__=="__main__":
         xlon.append(rr[i][3])
 
 
-#cur.close()
-#conn.close()
+
