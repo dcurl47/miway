@@ -38,10 +38,10 @@ $(function() {
 
 
 <div class="container" style="padding-top:90px;">
-     <div class="row">
+     <div class="row">       
          <div class="col-md-6 col-md-offset-3">
-               <!--- <div class="panel panel-primary">
-               <div class="panel-body"> -->
+               <!-- <div class="panel panel-primary"> -->
+               <!-- <div class="panel-body"> -->
 	       <div class="well">
                   <form action="" method="post" name="login">
                      {{form.hidden_tag()}}
@@ -49,8 +49,7 @@ $(function() {
 		     <!-- Display form with examples -->
 		     <!-- =====================================  -->
 		     <div class="form-group">
-                        <!--{{form.start.label}}--><strong>Start (temporarily only
-     works in Phoenix):</strong>
+                        <!--{{form.start.label}}--><strong>Start (temporarily only works in Phoenix):</strong>
                         {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}}
                         {% for error in form.errors.start %}
                            <span style="color: red;">[{{error}}]</span>
@@ -63,8 +62,8 @@ $(function() {
 		        {% for error in form.errors.end %}
                            <span style="color: red;">[{{error}}]</span>
                         {% endfor %}
-		        <br/>
-		     <div class="col-sm-6">
+		        <br>
+		      <div class="col-sm-6">
 		        <div class="form-group">
                            <!--<div class="col-sm-3">-->
                            <!--{{form.place.label}}--><strong>Where to Stop:</strong> {{form.place(class_="form-control")}}
@@ -80,6 +79,7 @@ $(function() {
 	             <!-- Submit form - return error messages if needed. -->
 	             <!-- =====================================  -->
 	             <div class="form-group">
+		       <br/>
 		       <input type="submit" class="btn btn-success btn-lg center-block" value="Find Route!">
 		       {% if notfound %}
 		           <div class="alert alert-danger">
@@ -91,8 +91,9 @@ $(function() {
 	             </div>
                     
 	          </form>
-	      </div>
-      </div>
+	       </div>     
+	 </div>     
+     </div>
 </div>
 
 
