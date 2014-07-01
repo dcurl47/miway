@@ -74,7 +74,11 @@ body {
 	             <!-- =====================================  -->
 	             <div class="form-group">
 		       <br/>
-		       <input type="submit" class="btn btn-success btn-lg center-block" value="Find Route!">
+		       <input id="find" type="submit" class="btn
+	             btn-success btn-lg center-block" value="Find
+	             Route!">
+		       <br>
+		        <input id="example" type="submit" class="btn btn-success btn-lg center-block" value="Example">
 		       {% if notfound %}
 		           <div class="alert alert-danger">
 		              {%for error in notfound %}
@@ -126,5 +130,14 @@ src="//maps.google.com/maps/api/js?sensor=false&key=AIzaSyBpmTdxyUqC1X914CKyT1b7
 
 </script>
 
+<script>
+$(function () {
+    var example = $('input#example')
+    example.bind('click', function () {
+        $('input#textsearchbox').val('5031 West Clarendon Ave,Phoenix, AZ');
+        $('input#textsearchbox2').val('5773 South 32nd St, Phoenix, AZ');
+    })
+})
+</script>
 
 {% endblock %}
