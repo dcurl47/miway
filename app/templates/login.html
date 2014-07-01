@@ -7,34 +7,26 @@
 <script src="{{ url_for('static', filename='js/jquery-1.10.2.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery-ui.js') }}"></script>
 
+
+
+
 <style>
 body {
     background: url({{ url_for('static',filename='images/roads-pictures-road-4781613.jpg') }});
-    background-size:cover;
-
-}
+    background-size:cover;}
 </style>
-<!-- =====================================  -->
-<!-- Make a slider bar (currently not used) -->
-<!-- =====================================  -->
-<script>
-$(function() {
-    $( "#slider-range" ).slider({
-        range: true,
-        min: 0,
-        max: 500,
-        values: [ 75, 300 ],
-        slide: function( event, ui ) {
-            $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-        }
-    });
-    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
-    " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-});
-</script>
+
+
+
+
+
+
 {% endblock %}
 
 {% block content %}
+
+
+
 
 
 <div class="container" style="padding-top:10%;">
@@ -50,7 +42,9 @@ $(function() {
 		     <!-- =====================================  -->
 		     <div class="form-group">
                         <!--{{form.start.label}}--><strong>Start (temporarily only works in Phoenix):</strong>
-                        {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}}
+                        {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control",id="textsearchbox",autocomplete="off")}}
+		       <!--{{form.start.label}}--><!--<strong>Start (temporarily only works in Phoenix):</strong>
+                        {{form.start(size=40,placeholder="E.g. 5031 W Clarendon Ave, Phoenix, AZ ",class_="form-control")}} -->
                         {% for error in form.errors.start %}
                            <span style="color: red;">[{{error}}]</span>
                         {% endfor %}
@@ -58,7 +52,7 @@ $(function() {
 		     <div class="form-group">
 		    
                         <!--{{form.end.label}}--><strong>End:</strong>
-		        {{form.end(size=40,placeholder="E.g. 5773 S 32nd St, Phoenix, AZ",class_="form-control")}}
+		        {{form.end(size=40,placeholder="E.g. 5773 S 32nd St, Phoenix, AZ",class_="form-control",id="textsearchbox2",autocomplete="off")}}
 		        {% for error in form.errors.end %}
                            <span style="color: red;">[{{error}}]</span>
                         {% endfor %}
@@ -95,6 +89,31 @@ $(function() {
 	 </div>     
      </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript"
+src="//maps.google.com/maps/api/js?sensor=false&key=AIzaSyBpmTdxyUqC1X914CKyT1b78WABMoex6eM&libraries=geometry,visualization,places"></script>
+
+<script type="text/javascript">
+  var input = document.getElementById('textsearchbox');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
+  var sw = google.maps.LatLng(32.87663650512695,-112.93763732910156 );
+  var ne = google.maps.LatLng(34.048667907714844,-111.26355743408203 );
+  var LatLngBounds = google.maps.LatLngBounds(sw, ne);
+  autocomplete.setBounds(LatLngBounds);
+</script>
+
+<script type="text/javascript">
+  var input = document.getElementById('textsearchbox2');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
+  var sw = google.maps.LatLng(32.87663650512695,-112.93763732910156 );
+  var ne = google.maps.LatLng(34.048667907714844,-111.26355743408203 );
+  var LatLngBounds = google.maps.LatLngBounds(sw, ne);
+  autocomplete.setBounds(LatLngBounds);
+</script>
 
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -106,5 +125,6 @@ $(function() {
   ga('send', 'pageview');
 
 </script>
+
 
 {% endblock %}
