@@ -7,3 +7,5 @@ app/settings/*.cfg
 server.py
 *~
 *.zip
+mykey.pem
+app/keys.py
